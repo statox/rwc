@@ -9,7 +9,16 @@ fn main() {
 
     // let contents = fs::read_to_string(filename).expect("Error while reading file");
     let contents = fs::read(filename).expect("Error while reading file");
-    let bytes = contents.len();
+    let (lines, words, bytes) = analyze(contents);
+    print_results((lines, words, bytes, filename));
+}
+
+fn print_results((lines, words, bytes, filename): (i32, i32, i32, &str)) {
+    println!("{} {} {} {}", lines, words, bytes, filename);
+}
+
+fn analyze(contents: Vec<u8>) -> (i32, i32, i32) {
+    let bytes = contents.len() as i32;
     let mut words = 0;
     let mut lines = 0;
     let mut prev_was_space = false;
@@ -33,7 +42,7 @@ fn main() {
         }
     }
 
-    println!("{} {} {} {}", lines, words, bytes, filename);
+    (lines, words, bytes)
 }
 
 fn parse_config(args: &[String]) -> &str {
