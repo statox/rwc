@@ -12,14 +12,24 @@ fn main() {
     let bytes = contents.len();
     let mut words = 0;
     let mut lines = 0;
+    let mut prev_was_space = false;
+    let mut prev_was_newline = false;
 
     for byte in contents.iter() {
         if *byte == b' ' {
-            words += 1;
-        }
-        if *byte == b'\n' {
+            if !prev_was_space && !prev_was_newline {
+                words += 1;
+            }
+            prev_was_space = true;
+        } else if *byte == b'\n' {
+            if !prev_was_space && !prev_was_newline {
+                words += 1;
+            }
             lines += 1;
-            words += 1;
+            prev_was_newline = true;
+        } else {
+            prev_was_space = false;
+            prev_was_newline = false;
         }
     }
 
